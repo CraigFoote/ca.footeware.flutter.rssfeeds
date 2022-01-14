@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'main.dart';
+import 'channel.dart';
 
 class AddEditDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -24,7 +24,7 @@ class AddEditDialog extends StatefulWidget {
 
 class _AddEditDialogState extends State<AddEditDialog> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     widget.nameController.text =
         (widget.channel == null ? '' : widget.channel?.title)!;
     widget.urlController.text =
@@ -81,14 +81,16 @@ class _AddEditDialogState extends State<AddEditDialog> {
                     if (widget.formKey.currentState!.validate()) {
                       Channel newChannel = Channel(widget.nameController.text,
                           Uri.parse(widget.urlController.text));
-                      setState(() {
-                        if (widget.channel == null) {
-                          widget.channels.add(newChannel);
-                        } else {
-                          widget.channels.remove(widget.channel);
-                          widget.channels.add(newChannel);
-                        }
-                      });
+                      setState(
+                        () {
+                          if (widget.channel == null) {
+                            widget.channels.add(newChannel);
+                          } else {
+                            widget.channels.remove(widget.channel);
+                            widget.channels.add(newChannel);
+                          }
+                        },
+                      );
                       Navigator.of(context).pop();
                     }
                   },
