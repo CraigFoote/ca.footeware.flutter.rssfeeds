@@ -65,6 +65,10 @@ class _HomePageState extends State<HomePage> {
     ]);
   }
 
+  void stateCallback(Function f) {
+    setState(() => f.call());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,8 +115,8 @@ class _HomePageState extends State<HomePage> {
         child: IndexedStack(
           index: _selectedPageIndex,
           children: [
-            Material(child: FeedPage(_channels, widget.httpClient)),
-            Material(child: ChannelsPage(widget._formKey, _channels)),
+            Material(child: FeedPage(_channels, widget.httpClient, stateCallback)),
+            Material(child: ChannelsPage(widget._formKey, _channels, stateCallback)),
           ],
         ),
       ),
@@ -124,6 +128,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (_) {
         return AddEditDialog(
+          stateCallback: setState,
           context: context,
           formKey: formKey,
           channels: _channels,

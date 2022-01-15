@@ -8,6 +8,7 @@ class AddEditDialog extends StatefulWidget {
   final List<Channel> channels;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController urlController = TextEditingController();
+  final Function stateCallback;
   final Channel? channel;
 
   AddEditDialog(
@@ -15,6 +16,7 @@ class AddEditDialog extends StatefulWidget {
       required this.context,
       required this.formKey,
       required this.channels,
+      required this.stateCallback,
       this.channel})
       : super(key: key);
 
@@ -77,24 +79,8 @@ class _AddEditDialogState extends State<AddEditDialog> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (widget.formKey.currentState!.validate()) {
-                      Channel newChannel = Channel(widget.nameController.text,
-                          Uri.parse(widget.urlController.text));
-                      setState(
-                        () {
-                          if (widget.channel == null) {
-                            widget.channels.add(newChannel);
-                          } else {
-                            widget.channels.remove(widget.channel);
-                            widget.channels.add(newChannel);
-                          }
-                        },
-                      );
-                      Navigator.of(context).pop();
-                    }
-                  },
                   child: const Text('Submit'),
+                  onPressed: (() => update()),
                 ),
               ),
             ),
@@ -102,5 +88,23 @@ class _AddEditDialogState extends State<AddEditDialog> {
         ),
       ),
     );
+  }
+
+  updateState() {
+    if (widget.channel == null) {
+      Channel newChannel = Channel(
+          widget.nameController.text, Uri.parse(widget.urlController.text));
+      widget.channels.add(newChannel);
+    } else {
+      widget.channel?.title = widget.nameController.text;
+      widget.channel?.url = Uri.parse(widget.urlController.text);
+    }
+    Navigator.of(context).pop();
+  }
+
+  update() {
+    if (widget.formKey.currentState!.validate()) {
+      widget.stateCallback.call(() => updateState());
+    }
   }
 }

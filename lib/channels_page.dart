@@ -4,16 +4,17 @@ import 'add_edit_dialog.dart';
 import 'channel.dart';
 
 class ChannelsPage extends StatefulWidget {
-  const ChannelsPage(this.formKey, this.channels, {Key? key}) : super(key: key);
+  const ChannelsPage(this.formKey, this.channels, this.stateCallback, {Key? key}) : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final List<Channel> channels;
+  final Function stateCallback;
 
   @override
-  State<StatefulWidget> createState() => ChannelsPageState();
+  State<StatefulWidget> createState() => _ChannelsPageState();
 }
 
-class ChannelsPageState extends State<ChannelsPage> {
+class _ChannelsPageState extends State<ChannelsPage> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -113,6 +114,7 @@ class ChannelsPageState extends State<ChannelsPage> {
       context: context,
       builder: (_) {
         return AddEditDialog(
+          stateCallback: widget.stateCallback,
           context: context,
           formKey: _formKey,
           channels: widget.channels,

@@ -8,22 +8,23 @@ import 'channel.dart';
 import 'feed_item.dart';
 
 class FeedPage extends StatefulWidget {
-  const FeedPage(this.channels, this.client, {Key? key}) : super(key: key);
+  const FeedPage(this.channels, this.client, this.stateCallback, {Key? key}) : super(key: key);
 
   final List<Channel> channels;
   final http.Client client;
+  final Function stateCallback;
 
   @override
-  State<StatefulWidget> createState() => FeedPageState();
+  State<StatefulWidget> createState() => _FeedPageState();
 }
 
-class FeedPageState extends State<FeedPage> {
+class _FeedPageState extends State<FeedPage> {
   late Future<List<FeedItem>> feedItems;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getFeedItems(widget.channels),
+      future: _getFeedItems(widget.channels),
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           final List<FeedItem>? items = snapshot.data as List<FeedItem>;
@@ -95,7 +96,7 @@ class FeedPageState extends State<FeedPage> {
     );
   }
 
-  Future<List<FeedItem>> getFeedItems(List<Channel> channels) async {
+  Future<List<FeedItem>> _getFeedItems(List<Channel> channels) async {
     List<FeedItem> list = [];
     for (var channel in channels) {
       await widget.client.get(channel.url).then((response) {
