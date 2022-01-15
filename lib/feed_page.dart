@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dart_rss/dart_rss.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:rss_feeds/rss_exception.dart';
 
@@ -8,7 +9,8 @@ import 'channel.dart';
 import 'feed_item.dart';
 
 class FeedPage extends StatefulWidget {
-  const FeedPage(this.channels, this.client, this.stateCallback, {Key? key}) : super(key: key);
+  const FeedPage(this.channels, this.client, this.stateCallback, {Key? key})
+      : super(key: key);
 
   final List<Channel> channels;
   final http.Client client;
@@ -22,7 +24,7 @@ class _FeedPageState extends State<FeedPage> {
   late Future<List<FeedItem>> feedItems;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return FutureBuilder(
       future: _getFeedItems(widget.channels),
       builder: (_, snapshot) {
@@ -109,8 +111,50 @@ class _FeedPageState extends State<FeedPage> {
           list.add(item);
         }
       }).catchError((e) {
-        debugPrint('Got error: $e');
-        throw e;
+        debugPrint('Error reading feed: $e');
+        final SnackBar snackBar = SnackBar(
+          backgroundColor: const Color(0xff434c5e),
+          content: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                'An error occurred parsing an RSS feed.\n$e',
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IconButton(
+                      tooltip: 'Copy to clipboard',
+                      color: const Color(0xffd8dee9),
+                      icon: const Icon(
+                        Icons.content_copy_rounded,
+                      ),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: '$e'));
+                      },
+                    ),
+                    IconButton(
+                      tooltip: 'Dismiss',
+                      color: const Color(0xffd8dee9),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                      ),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          duration: const Duration(seconds: 20),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       });
     }
     list.sort((a, b) => a.dateTime.compareTo(b.dateTime));

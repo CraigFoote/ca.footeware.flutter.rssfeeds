@@ -48,12 +48,6 @@ class _AddEditDialogState extends State<AddEditDialog> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a name.';
-                } else {
-                  for (Channel channel in widget.channels) {
-                    if (channel.title == widget.nameController.text) {
-                      return 'A feed with that name already exists.';
-                    }
-                  }
                 }
                 return null;
               },
