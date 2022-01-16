@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'add_edit_dialog.dart';
 import 'channel.dart';
+import 'channel_set.dart';
 
 class ChannelsPage extends StatefulWidget {
-  const ChannelsPage(this.formKey, this.channels, this.stateCallback, {Key? key}) : super(key: key);
+  const ChannelsPage(
+      {required this.formKey,
+      required this.channels,
+      required this.stateCallback,
+      Key? key})
+      : super(key: key);
 
   final GlobalKey<FormState> formKey;
-  final List<Channel> channels;
+  final ChannelSet channels;
   final Function stateCallback;
 
   @override
@@ -18,7 +24,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: widget.channels.length,
+      itemCount: widget.channels.items.length,
       padding: const EdgeInsets.all(8),
       separatorBuilder: (_, __) => const Divider(
         color: Color(0xff5e81ac),
@@ -26,13 +32,13 @@ class _ChannelsPageState extends State<ChannelsPage> {
         height: 8,
       ),
       itemBuilder: (_, index) {
-        Channel currentChannel = widget.channels[index];
+        Channel currentChannel = widget.channels.items.elementAt(index);
         return ListTile(
           leading: const Icon(Icons.rss_feed_rounded),
           title: Row(
             children: [
               Text(
-                currentChannel.title,
+                currentChannel.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -65,9 +71,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
             padding: const EdgeInsets.symmetric(
               vertical: 5,
             ),
-            child: SelectableText(currentChannel.description +
-                '\n\n' +
-                currentChannel.url.toString()),
+            child: SelectableText(currentChannel.url.toString()),
           ),
           tileColor: const Color(0xff8fbcbb),
           dense: false,
@@ -85,7 +89,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
         return AlertDialog(
           backgroundColor: const Color(0xffd8dee9),
           title:
-          Text('Are you sure you want to delete ${currentChannel.title}?'),
+              Text('Are you sure you want to delete ${currentChannel.name}?'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,8 +100,10 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   child: ElevatedButton(
                     child: const Text('OK'),
                     onPressed: () {
-                      setState(() => widget.channels.remove(currentChannel));
+                      widget.channels.items.remove(
+                          currentChannel); // not sure why this doesn't work
                       Navigator.of(context).pop();
+                      widget.stateCallback(widget.channels);
                     },
                   ),
                 ),

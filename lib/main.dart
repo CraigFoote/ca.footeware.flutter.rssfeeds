@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 import 'package:rss_feeds/color_factory.dart';
 
 import 'add_edit_dialog.dart';
 import 'channel.dart';
+import 'channel_set.dart';
 import 'channels_page.dart';
 import 'feed_page.dart';
 
@@ -48,25 +50,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedPageIndex = 0;
-  final List<Channel> _channels = [];
+  late ChannelSet _channels;
+  late final LocalStorage storage;
 
   @override
   void initState() {
     super.initState();
-    _channels.addAll([
-      Channel(
-        'Techcrunch',
-        Uri.parse('http://feeds.feedburner.com/Techcrunch'),
-      ),
-      Channel(
-        'Ars Technica',
-        Uri.parse('http://feeds.arstechnica.com/arstechnica/index'),
-      ),
-    ]);
+    storage = LocalStorage('rss_feeds');
   }
 
-  void stateCallback(Function f) {
-    setState(() => f.call());
+  void stateCallback(ChannelSet list) {
+    storage.setItem('rss_feeds', _channels.toJSONEncodable());
+    setState(() {
+      _channels = list;
+    });
   }
 
   @override
@@ -110,15 +107,37 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Material(
-        // wrap in Material to prevent bleed through
-        child: IndexedStack(
-          index: _selectedPageIndex,
-          children: [
-            Material(child: FeedPage(_channels, widget.httpClient, stateCallback)),
-            Material(child: ChannelsPage(widget._formKey, _channels, stateCallback)),
-          ],
-        ),
+      body: FutureBuilder(
+        future: _getChannels(),
+        builder: (_, snapshot) {
+           if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xff4c566a),
+              ),
+            );
+          } else {
+            _channels = snapshot.data as ChannelSet;
+            return Material(
+              // wrap in Material to prevent bleed through
+              child: IndexedStack(
+                index: _selectedPageIndex,
+                children: [
+                  Material(
+                      child: FeedPage(
+                    client: widget.httpClient,
+                    channels: _channels,
+                  )),
+                  Material(
+                      child: ChannelsPage(
+                          formKey: widget._formKey,
+                          stateCallback: stateCallback,
+                          channels: _channels)),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -128,7 +147,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (_) {
         return AddEditDialog(
-          stateCallback: setState,
+          stateCallback: stateCallback,
           context: context,
           formKey: formKey,
           channels: _channels,
@@ -136,4 +155,24 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+  Future<ChannelSet> _getChannels() async {
+    await storage.ready;
+    ChannelSet channelSet = ChannelSet();
+    var items = storage.getItem('rss_feeds');
+    List<Channel> list = [];
+    if (items != null) {
+      list = List<Channel>.from(
+        (items as List).map(
+          (item) => Channel(
+            name: item['name'],
+            url: item['url'],
+          ),
+        ),
+      );
+      channelSet.items.addAll(list);
+    }
+    return channelSet;
+  }
+
 }
