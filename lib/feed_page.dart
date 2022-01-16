@@ -232,16 +232,21 @@ class _FeedItemPageState extends State<FeedItemPage> {
                       fontSize: 20,
                     ),
                   ),
-                  subtitle: Text(
-                    widget.feedItem.rssFeed.title! +
-                        '\n\n' +
-                        widget.feedItem.rssItem.description! +
-                        '\n\n' +
-                        widget.feedItem.rssItem.pubDate!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
+                  subtitle: Html(
+                      onLinkTap: (url, context, attributes, element) =>
+                          _launchInBrowser(url!),
+                      style: {
+                        'body': Style(
+                          fontSize: FontSize.large,
+                          backgroundColor: const Color(0xffd8dee9),
+                          padding: const EdgeInsets.all(8),
+                        ),
+                      },
+                      data: widget.feedItem.rssFeed.title! +
+                          '\n\n' +
+                          widget.feedItem.rssItem.description! +
+                          '\n\n' +
+                          widget.feedItem.rssItem.pubDate!),
                   tileColor: const Color(0xff81a1c1),
                   dense: false,
                   contentPadding: const EdgeInsets.all(8),
