@@ -48,6 +48,18 @@ class _ChannelsPageState extends State<ChannelsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Tooltip(
+                      message: 'View Feed Items',
+                      child: Switch(
+                        value: currentChannel.active,
+                        onChanged: (value) {
+                          setState(() {
+                            currentChannel.active = value;
+                            widget.stateCallback(widget.channels);
+                          });
+                        },
+                      ),
+                    ),
                     IconButton(
                       tooltip: 'Edit',
                       icon: const Icon(Icons.edit_rounded),

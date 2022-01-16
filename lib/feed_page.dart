@@ -109,61 +109,63 @@ class _FeedPageState extends State<FeedPage> {
   Future<List<FeedItem>> _getFeedItems(ChannelSet channels) async {
     List<FeedItem> list = [];
     for (var channel in channels.items) {
-      await widget.client.get(Uri.parse(channel.url)).then((response) {
-        return response.body;
-      }).then((bodyString) {
-        RssFeed rssFeed = RssFeed.parse(bodyString);
-        for (RssItem rssItem in rssFeed.items) {
-          FeedItem item = FeedItem(rssFeed, rssItem);
-          list.add(item);
-        }
-      }).catchError(
-        (e) {
-          final SnackBar _snackBar = SnackBar(
-            backgroundColor: const Color(0xff434c5e),
-            content: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  'An error occurred parsing an RSS feed.\n$e',
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      IconButton(
-                        tooltip: 'Copy to clipboard',
-                        color: const Color(0xffd8dee9),
-                        icon: const Icon(
-                          Icons.content_copy_rounded,
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: '$e'));
-                        },
-                      ),
-                      IconButton(
-                        tooltip: 'Dismiss',
-                        color: const Color(0xffd8dee9),
-                        icon: const Icon(
-                          Icons.close_rounded,
-                        ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        },
-                      ),
-                    ],
+      if (channel.active) {
+        await widget.client.get(Uri.parse(channel.url)).then((response) {
+          return response.body;
+        }).then((bodyString) {
+          RssFeed rssFeed = RssFeed.parse(bodyString);
+          for (RssItem rssItem in rssFeed.items) {
+            FeedItem item = FeedItem(rssFeed, rssItem);
+            list.add(item);
+          }
+        }).catchError(
+          (e) {
+            final SnackBar _snackBar = SnackBar(
+              backgroundColor: const Color(0xff434c5e),
+              content: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'An error occurred parsing an RSS feed.\n$e',
                   ),
-                ),
-              ],
-            ),
-            duration: const Duration(seconds: 20),
-          );
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(_snackBar);
-        },
-      );
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        IconButton(
+                          tooltip: 'Copy to clipboard',
+                          color: const Color(0xffd8dee9),
+                          icon: const Icon(
+                            Icons.content_copy_rounded,
+                          ),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: '$e'));
+                          },
+                        ),
+                        IconButton(
+                          tooltip: 'Dismiss',
+                          color: const Color(0xffd8dee9),
+                          icon: const Icon(
+                            Icons.close_rounded,
+                          ),
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              duration: const Duration(seconds: 20),
+            );
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(_snackBar);
+          },
+        );
+      }
     }
     list.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return list;

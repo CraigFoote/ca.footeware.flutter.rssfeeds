@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
       body: FutureBuilder(
         future: _getChannels(),
         builder: (_, snapshot) {
-           if (!snapshot.hasData) {
+          if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(
                 color: Color(0xff4c566a),
@@ -167,6 +167,7 @@ class _HomePageState extends State<HomePage> {
           (item) => Channel(
             name: item['name'],
             url: item['url'],
+            active: item['active'],
           ),
         ),
       );
@@ -174,5 +175,4 @@ class _HomePageState extends State<HomePage> {
     }
     return channelSet;
   }
-
 }

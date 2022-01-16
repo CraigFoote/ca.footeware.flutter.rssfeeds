@@ -1,15 +1,17 @@
 import 'package:quiver/core.dart';
 
 class Channel {
-  late String name;
-  late String url;
+  String name;
+  String url;
+  bool active;
 
-  Channel({required this.name, required this.url});
+  Channel({required this.name, required this.url, required this.active});
 
   toJSONEncodable() {
     Map<String, dynamic> m = {};
     m['name'] = name;
     m['url'] = url;
+    m['active'] = active;
     return m;
   }
 

@@ -101,6 +101,7 @@ class _AddEditDialogState extends State<AddEditDialog> {
                         Channel newChannel = Channel(
                           name: name,
                           url: url,
+                          active: true,
                         );
                         widget.channels.items.add(newChannel);
                       } else {
@@ -119,5 +120,4 @@ class _AddEditDialogState extends State<AddEditDialog> {
       ),
     );
   }
-
 }
