@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:rss_feeds/color_factory.dart';
 
@@ -41,7 +44,6 @@ class HomePage extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
-  final httpClient = http.Client();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -52,11 +54,16 @@ class _HomePageState extends State<HomePage> {
   int _selectedPageIndex = 0;
   late ChannelSet _channels;
   late final LocalStorage storage;
+  late final IOClient httpClient;
 
   @override
   void initState() {
     super.initState();
     storage = LocalStorage('rss_feeds');
+    final client = HttpClient();
+    client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+    httpClient = IOClient(client);
   }
 
   void stateCallback(ChannelSet list) {
@@ -125,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Material(
                       child: FeedPage(
-                    client: widget.httpClient,
+                    client: httpClient,
                     channels: _channels,
                   )),
                   Material(
