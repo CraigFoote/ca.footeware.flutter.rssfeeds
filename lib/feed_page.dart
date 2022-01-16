@@ -39,63 +39,68 @@ class _FeedPageState extends State<FeedPage> {
           if (items != null) {
             int itemCount = items.length;
             final ScrollController controller = ScrollController();
-            return ListView.separated(
-              itemCount: itemCount,
-              padding: const EdgeInsets.all(8),
-              separatorBuilder: (_, __) => const Divider(
-                color: Color(0xff81a1c1),
-                thickness: 1,
-                height: 8,
-              ),
-              controller: controller,
-              itemBuilder: (_, index) {
-                FeedItem? feedItem = items[index];
-                String? url;
-                if (feedItem.rssFeed.image != null &&
-                    feedItem.rssFeed.image?.url != null) {
-                  url = feedItem.rssFeed.image?.url;
-                } else {
-                  url =
-                      'https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png';
-                }
-                return Material(
-                  child: ListTile(
-                    isThreeLine: true,
-                    leading: SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: Hero(
-                        tag: feedItem.rssItem.title!,
-                        child: CachedNetworkImage(
-                          height: 50,
-                          imageUrl: url!,
+            return RefreshIndicator(
+              onRefresh: () => _getFeedItems(widget.channels),
+              color: const Color(0xff434c5e),
+              child: ListView.separated(
+                itemCount: itemCount,
+                padding: const EdgeInsets.all(8),
+                physics: const AlwaysScrollableScrollPhysics(),
+                separatorBuilder: (_, __) => const Divider(
+                  color: Color(0xff81a1c1),
+                  thickness: 1,
+                  height: 8,
+                ),
+                controller: controller,
+                itemBuilder: (_, index) {
+                  FeedItem? feedItem = items[index];
+                  String? url;
+                  if (feedItem.rssFeed.image != null &&
+                      feedItem.rssFeed.image?.url != null) {
+                    url = feedItem.rssFeed.image?.url;
+                  } else {
+                    url =
+                        'https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png';
+                  }
+                  return Material(
+                    child: ListTile(
+                      isThreeLine: true,
+                      leading: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: Hero(
+                          tag: feedItem.rssItem.title!,
+                          child: CachedNetworkImage(
+                            height: 50,
+                            imageUrl: url!,
+                          ),
                         ),
                       ),
-                    ),
-                    title: SelectableText(
-                      feedItem.rssItem.title!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                      title: SelectableText(
+                        feedItem.rssItem.title!,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5,
+                      subtitle: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5,
+                        ),
+                        child: Text(feedItem.rssFeed.title! +
+                            '\n\n' +
+                            feedItem.rssItem.pubDate!),
                       ),
-                      child: Text(feedItem.rssFeed.title! +
-                          '\n\n' +
-                          feedItem.rssItem.pubDate!),
+                      tileColor: const Color(0xff81a1c1),
+                      dense: false,
+                      contentPadding: const EdgeInsets.all(8),
+                      textColor: const Color(0xff4c566a),
+                      hoverColor: const Color(0xffebcb8b),
+                      onTap: () => _handleSelectedFeedItem(feedItem),
                     ),
-                    tileColor: const Color(0xff81a1c1),
-                    dense: false,
-                    contentPadding: const EdgeInsets.all(8),
-                    textColor: const Color(0xff4c566a),
-                    hoverColor: const Color(0xffebcb8b),
-                    onTap: () => _handleSelectedFeedItem(feedItem),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           } else {
             throw RssException('\'feedItem\' was null');
