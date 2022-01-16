@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:rss_feeds/color_factory.dart';
@@ -131,15 +130,17 @@ class _HomePageState extends State<HomePage> {
                 index: _selectedPageIndex,
                 children: [
                   Material(
-                      child: FeedPage(
-                    client: httpClient,
-                    channels: _channels,
-                  )),
+                    child: FeedPage(
+                      client: httpClient,
+                      channels: _channels,
+                    ),
+                  ),
                   Material(
-                      child: ChannelsPage(
-                          formKey: widget._formKey,
-                          stateCallback: stateCallback,
-                          channels: _channels)),
+                    child: ChannelsPage(
+                        formKey: widget._formKey,
+                        stateCallback: stateCallback,
+                        channels: _channels),
+                  ),
                 ],
               ),
             );
