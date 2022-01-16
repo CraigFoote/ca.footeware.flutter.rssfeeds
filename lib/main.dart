@@ -10,6 +10,7 @@ import 'channel.dart';
 import 'channel_set.dart';
 import 'channels_page.dart';
 import 'feed_page.dart';
+import 'info_page.dart';
 
 void main() {
   runApp(const RssFeedApp());
@@ -91,6 +92,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+      drawer: _buildDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xff4c566a),
         selectedItemColor: const Color(0xffebcb8b),
@@ -182,5 +184,43 @@ class _HomePageState extends State<HomePage> {
       channelSet.items.addAll(list);
     }
     return channelSet;
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      backgroundColor: Color(0xffd8dee9),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    child: Builder(
+                      builder: (_) => const Icon(
+                        Icons.info,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const InfoPage(
+                              title: 'Info',
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
