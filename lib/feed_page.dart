@@ -122,6 +122,7 @@ class _FeedPageState extends State<FeedPage> {
             FeedItem item = FeedItem(rssFeed, rssItem);
             list.add(item);
           }
+          list.sort((a, b) => b.dateTime.compareTo(a.dateTime));
         }).catchError(
           (e) {
             final SnackBar _snackBar = SnackBar(
@@ -171,7 +172,6 @@ class _FeedPageState extends State<FeedPage> {
         );
       }
     }
-    list.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return list;
   }
 

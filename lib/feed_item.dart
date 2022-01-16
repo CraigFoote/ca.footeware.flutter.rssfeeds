@@ -1,4 +1,5 @@
 import 'package:dart_rss/dart_rss.dart';
+import 'package:intl/intl.dart';
 
 class FeedItem {
   final RssFeed rssFeed;
@@ -7,11 +8,8 @@ class FeedItem {
 
   FeedItem(this.rssFeed, this.rssItem) {
     String pubDate = rssItem.pubDate!;
-    DateTime? dateTime = DateTime.tryParse(pubDate);
-    if (dateTime != null) {
-      this.dateTime = dateTime;
-    } else {
-      this.dateTime = DateTime.now();
-    }
+    final format = DateFormat('E, d LLL y H:m:s z');
+    DateTime parsed = format.parse(pubDate);
+    dateTime = parsed;
   }
 }
