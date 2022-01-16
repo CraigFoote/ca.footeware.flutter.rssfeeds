@@ -39,52 +39,53 @@ class _FeedItemPageState extends State<FeedItemPage> {
         String data = snapshot.data as String;
         return Material(
           child: Scaffold(
-            appBar: AppBar(title: const Text('RSS Feed Item')),
-            body: Column(
-              children: [
-                ListTile(
-                  isThreeLine: true,
-                  leading: SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Hero(
-                      tag: widget.feedItem.rssItem.title!,
-                      child: CachedNetworkImage(
-                        height: 50,
-                        imageUrl: url!,
+            appBar: AppBar(title: Text('${widget.feedItem.rssFeed.title}')),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListTile(
+                    isThreeLine: true,
+                    leading: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Hero(
+                        tag: widget.feedItem.rssItem.title!,
+                        child: CachedNetworkImage(
+                          height: 50,
+                          imageUrl: url!,
+                        ),
                       ),
                     ),
-                  ),
-                  title: SelectableText(
-                    widget.feedItem.rssItem.title!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                    title: SelectableText(
+                      widget.feedItem.rssItem.title!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
+                    subtitle: Html(
+                        onLinkTap: (url, context, attributes, element) =>
+                            _launchInBrowser(url!),
+                        style: {
+                          'body': Style(
+                            fontSize: FontSize.large,
+                            backgroundColor: const Color(0xffd8dee9),
+                            padding: const EdgeInsets.all(8),
+                          ),
+                        },
+                        data: widget.feedItem.rssFeed.title! +
+                            '<br>' +
+                            widget.feedItem.rssItem.description! +
+                            '<br>' +
+                            widget.feedItem.rssItem.pubDate!),
+                    tileColor: const Color(0xff81a1c1),
+                    dense: false,
+                    contentPadding: const EdgeInsets.all(8),
+                    textColor: const Color(0xff4c566a),
+                    hoverColor: const Color(0xffebcb8b),
                   ),
-                  subtitle: Html(
-                      onLinkTap: (url, context, attributes, element) =>
-                          _launchInBrowser(url!),
-                      style: {
-                        'body': Style(
-                          fontSize: FontSize.large,
-                          backgroundColor: const Color(0xffd8dee9),
-                          padding: const EdgeInsets.all(8),
-                        ),
-                      },
-                      data: widget.feedItem.rssFeed.title! +
-                          '\n\n' +
-                          widget.feedItem.rssItem.description! +
-                          '\n\n' +
-                          widget.feedItem.rssItem.pubDate!),
-                  tileColor: const Color(0xff81a1c1),
-                  dense: false,
-                  contentPadding: const EdgeInsets.all(8),
-                  textColor: const Color(0xff4c566a),
-                  hoverColor: const Color(0xffebcb8b),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
+                  Container(
+                    decoration: const BoxDecoration(color: Color(0xff81a1c1)),
                     child: Html(
                       onLinkTap: (url, context, attributes, element) =>
                           _launchInBrowser(url!),
@@ -98,8 +99,8 @@ class _FeedItemPageState extends State<FeedItemPage> {
                       data: data,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
