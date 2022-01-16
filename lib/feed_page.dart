@@ -76,7 +76,7 @@ class _FeedPageState extends State<FeedPage> {
                           ),
                         ),
                       ),
-                      title: SelectableText(
+                      title: Text(
                         feedItem.rssItem.title!,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
