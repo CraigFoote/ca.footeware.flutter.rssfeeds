@@ -5,12 +5,12 @@ import 'channel.dart';
 import 'channel_set.dart';
 
 class ChannelsPage extends StatefulWidget {
-  const ChannelsPage(
-      {required this.formKey,
-      required this.channels,
-      required this.stateCallback,
-      Key? key})
-      : super(key: key);
+  const ChannelsPage({
+    required this.formKey,
+    required this.channels,
+    required this.stateCallback,
+    Key? key,
+  }) : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final ChannelSet channels;
@@ -100,8 +100,9 @@ class _ChannelsPageState extends State<ChannelsPage> {
       builder: (_) {
         return AlertDialog(
           backgroundColor: const Color(0xffd8dee9),
-          title:
-              Text('Are you sure you want to delete ${currentChannel.name}?'),
+          title: Text(
+            'Are you sure you want to delete ${currentChannel.name}?',
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

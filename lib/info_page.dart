@@ -3,13 +3,16 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoPage extends StatelessWidget {
-  const InfoPage({Key? key, required this.title}) : super(key: key);
+  const InfoPage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
   final String title;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xffd8dee9),
+        backgroundColor: const Color(0xffd8dee9),
         appBar: AppBar(
           title: Text(
             title,
@@ -23,7 +26,9 @@ class InfoPage extends StatelessWidget {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(
+                  10,
+                ),
                 child: Linkify(
                   text: 'Another fine mess by http://Footeware.ca',
                   onOpen: _openUrl,

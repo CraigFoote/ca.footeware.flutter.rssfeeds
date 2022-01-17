@@ -21,7 +21,9 @@ class RssFeedApp extends StatelessWidget {
   final String title = 'RSS Feeds';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    _,
+  ) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: title,
@@ -61,13 +63,20 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     storage = LocalStorage('rss_feeds');
     final client = HttpClient();
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
+    client.badCertificateCallback = (
+      X509Certificate cert,
+      String host,
+      int port,
+    ) =>
+        true;
     httpClient = IOClient(client);
   }
 
   void stateCallback(ChannelSet list) {
-    storage.setItem('rss_feeds', _channels.toJSONEncodable());
+    storage.setItem(
+      'rss_feeds',
+      _channels.toJSONEncodable(),
+    );
     setState(() {
       _channels = list;
     });
@@ -88,7 +97,9 @@ class _HomePageState extends State<HomePage> {
               Icons.add_circle_rounded,
             ),
             tooltip: 'Add Feed',
-            color: const Color(0xffd08770),
+            color: const Color(
+              0xffd08770,
+            ),
           )
         ],
       ),
@@ -188,7 +199,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildDrawer() {
     return Drawer(
-      backgroundColor: Color(0xffd8dee9),
+      backgroundColor: const Color(0xffd8dee9),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(
@@ -196,7 +207,9 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(
+                    10.0,
+                  ),
                   child: GestureDetector(
                     child: Builder(
                       builder: (_) => const Icon(
@@ -206,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) {
+                          builder: (_) {
                             return const InfoPage(
                               title: 'Info',
                             );

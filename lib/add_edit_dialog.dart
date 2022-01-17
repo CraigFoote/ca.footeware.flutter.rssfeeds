@@ -53,15 +53,15 @@ class _AddEditDialogState extends State<AddEditDialog> {
                 } else {
                   if (widget.channel == null) {
                     // creating new
-                    for (Channel c in widget.channels.items) {
-                      if (c.name == value) {
+                    for (Channel channel in widget.channels.items) {
+                      if (channel.name == value) {
                         return 'There\'s already a feed by that name.';
                       }
                     }
                   } else {
                     // editing
-                    for (Channel c in widget.channels.items) {
-                      if (c != widget.channel && c.name == value) {
+                    for (Channel channel in widget.channels.items) {
+                      if (channel != widget.channel && channel.name == value) {
                         return 'There\'s already a feed by that name.';
                       }
                     }
