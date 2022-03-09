@@ -12,31 +12,32 @@ class InfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xffd8dee9),
-        appBar: AppBar(
-          title: Text(
-            title,
-          ),
+      backgroundColor: const Color(0xffd8dee9),
+      appBar: AppBar(
+        title: Text(
+          title,
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'images/programmer.jpg',
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(
-                  10,
-                ),
-                child: Linkify(
-                  text: 'Another fine mess by http://Footeware.ca',
-                  onOpen: _openUrl,
-                ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'images/programmer.jpg',
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(
+                10,
+              ),
+              child: Linkify(
+                text: 'Another fine mess by http://Footeware.ca',
+                onOpen: _openUrl,
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   void _openUrl(link) async {

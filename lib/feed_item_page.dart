@@ -29,7 +29,7 @@ class _FeedItemPageState extends State<FeedItemPage> {
           'https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png';
     }
     return FutureBuilder(
-      future: getContent(widget.feedItem.rssItem.link),
+      future: _getContent(widget.feedItem.rssItem.link),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
@@ -117,7 +117,7 @@ class _FeedItemPageState extends State<FeedItemPage> {
     }
   }
 
-  Future<String> getContent(String? link) async {
+  Future<String> _getContent(String? link) async {
     String body = '';
     await widget.client.get(Uri.parse(link!)).then((response) {
       body = response.body;

@@ -18,22 +18,22 @@ void main() {
 
 class RssFeedApp extends StatelessWidget {
   const RssFeedApp({Key? key}) : super(key: key);
-  final String title = 'RSS Feeds';
+  final String _title = 'RSS Feeds';
 
   @override
   Widget build(
-    _,
+    context,
   ) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: title,
+      title: _title,
       theme: ThemeData(
         primarySwatch: ColorFactory.createMaterialColor(
           const Color(0xff4c566a),
         ),
       ),
       home: HomePage(
-        title: title,
+        title: _title,
       ),
     );
   }
@@ -55,13 +55,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedPageIndex = 0;
   late ChannelSet _channels;
-  late final LocalStorage storage;
-  late final IOClient httpClient;
+  late final LocalStorage _storage;
+  late final IOClient _httpClient;
 
   @override
   void initState() {
     super.initState();
-    storage = LocalStorage('rss_feeds');
+    _storage = LocalStorage('rss_feeds');
     final client = HttpClient();
     client.badCertificateCallback = (
       X509Certificate cert,
@@ -69,11 +69,11 @@ class _HomePageState extends State<HomePage> {
       int port,
     ) =>
         true;
-    httpClient = IOClient(client);
+    _httpClient = IOClient(client);
   }
 
-  void stateCallback(ChannelSet list) {
-    storage.setItem(
+  void _stateCallback(ChannelSet list) {
+    _storage.setItem(
       'rss_feeds',
       _channels.toJSONEncodable(),
     );
@@ -144,14 +144,14 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Material(
                     child: FeedPage(
-                      client: httpClient,
+                      client: _httpClient,
                       channels: _channels,
                     ),
                   ),
                   Material(
                     child: ChannelsPage(
                         formKey: widget._formKey,
-                        stateCallback: stateCallback,
+                        stateCallback: _stateCallback,
                         channels: _channels),
                   ),
                 ],
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (_) {
         return AddEditDialog(
-          stateCallback: stateCallback,
+          stateCallback: _stateCallback,
           context: context,
           formKey: formKey,
           channels: _channels,
@@ -178,9 +178,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<ChannelSet> _getChannels() async {
-    await storage.ready;
+    await _storage.ready;
     ChannelSet channelSet = ChannelSet();
-    var items = storage.getItem('rss_feeds');
+    var items = _storage.getItem('rss_feeds');
     List<Channel> list = [];
     if (items != null) {
       list = List<Channel>.from(
