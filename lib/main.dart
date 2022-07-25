@@ -32,15 +32,15 @@ class RssFeedApp extends StatelessWidget {
           const Color(0xff4c566a),
         ),
       ),
-      home: HomePage(
+      home: _HomePage(
         title: _title,
       ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage({
+class _HomePage extends StatefulWidget {
+  _HomePage({
     Key? key,
     required this.title,
   }) : super(key: key);
@@ -49,10 +49,10 @@ class HomePage extends StatefulWidget {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<_HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<_HomePage> {
   int _selectedPageIndex = 0;
   late ChannelSet _channels;
   late final LocalStorage _storage;

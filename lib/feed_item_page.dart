@@ -109,9 +109,8 @@ class _FeedItemPageState extends State<FeedItemPage> {
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (!await launch(
-      url,
-      forceWebView: false,
+    if (!await launchUrl(
+      Uri.parse(url),
     )) {
       throw 'Could not launch $url';
     }

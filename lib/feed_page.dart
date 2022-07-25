@@ -177,7 +177,9 @@ class _FeedPageState extends State<FeedPage> {
 
   _handleSelectedFeedItem(FeedItem feedItem) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) =>
-            FeedItemPage(client: widget.client, feedItem: feedItem,)));
+        builder: (_) => FeedItemPage(
+              client: widget.client,
+              feedItem: feedItem,
+            )));
   }
 }
